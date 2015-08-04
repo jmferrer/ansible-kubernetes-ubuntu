@@ -1,5 +1,5 @@
 - name: Install git
-  apt: name=git state=present
+  apt: name=git state=present update_cache=yes
 
 - name: Download kubernetes repo
   git: repo=https://github.com/GoogleCloudPlatform/kubernetes.git dest=/root/kubernetes.git force=yes
@@ -13,6 +13,9 @@
 
 - name: Configure ssh. Send id_rsa file
   copy: src=id_rsa dest=/root/.ssh/id_rsa owner=root group=root mode=0700
+
+- name: Configure ssh. Send authorized_keys file
+  copy: src=authorized_keys dest=/root/.ssh/authorized_keys owner=root group=root mode=0700
 
 - name: Configure and deploy kubernetes
   template: src=config-default.sh.j2 dest=/root/kubernetes.git/cluster/ubuntu/config-default.sh
