@@ -1,0 +1,5 @@
+- name: Configure DNS server and domain
+  copy: src=resolv.conf dest=/etc/resolv.conf
+
+- name: Configure hosts file
+  template: src=hosts.j2 dest=/etc/hosts

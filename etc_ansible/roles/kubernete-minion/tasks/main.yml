@@ -1,0 +1,25 @@
+- name: Install linux-image extras
+  apt: name=linux-image-extra-virtual state=present
+#  apt: name={{ item }} state=present
+#  with_items:
+#  - linux-image-extra-$(uname -r)
+#  - linux-image-extra-virtual
+
+- name: Add apt key
+  apt_key: keyserver=p80.pool.sks-keyservers.net id=58118E89F3A912897C070ADBF76221572C52609D
+
+- name: Add docker repository
+  apt_repository: repo='deb https://apt.dockerproject.org/repo ubuntu-trusty main' state=present
+
+- name: Install docker
+  apt: name=docker-engine state=present update_cache=yes
+
+- name: Install bridge-utils
+  apt: name=bridge-utils state=present
+
+- name: Configure ssh. Create /root/.ssh directory
+  file: path=/root/.ssh state=directory owner=root group=root mode=0700
+
+- name: Configure ssh. Copy authorized_keys to root user
+  copy: src=authorized_keys dest=/root/.ssh/authorized_keys group=root owner=root mode=0700
+

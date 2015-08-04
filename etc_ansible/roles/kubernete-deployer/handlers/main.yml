@@ -1,0 +1,5 @@
+- name: build kubernetes
+  shell: cd /root/kubernetes.git/cluster/ubuntu ; ./build.sh
+
+- name: deploy kubernetes
+  shell: cd /root/kubernetes.git/cluster;KUBERNETES_PROVIDER=ubuntu ./kube-up.sh

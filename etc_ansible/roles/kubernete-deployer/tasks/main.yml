@@ -1,0 +1,23 @@
+- name: Install git
+  apt: name=git state=present
+
+- name: Download kubernetes repo
+  git: repo=https://github.com/GoogleCloudPlatform/kubernetes.git dest=/root/kubernetes.git force=yes
+  notify: build kubernetes
+
+- name: flush handlers
+  meta: flush_handlers
+
+- name: Configure ssh. Create /root/.ssh directory
+  file: path=/root/.ssh state=directory owner=root group=root mode=0700
+
+- name: Configure ssh. Send id_rsa file
+  copy: src=id_rsa dest=/root/.ssh/id_rsa owner=root group=root mode=0700
+
+- name: Configure and deploy kubernetes
+  template: src=config-default.sh.j2 dest=/root/kubernetes.git/cluster/ubuntu/config-default.sh
+  notify: deploy kubernetes
+
+- name: flush handlers
+  meta: flush_handlers
+

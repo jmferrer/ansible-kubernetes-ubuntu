@@ -1,0 +1,16 @@
+# From https://github.com/GoogleCloudPlatform/kubernetes/blob/release-1.0/docs/getting-started-guides/ubuntu.md
+- name: Install Kubernete Minions Prerequisites
+  hosts: kubernete-minions
+  remote_user: ubuntu
+  sudo: yes
+  roles:
+  - base
+  - kubernete-minion
+
+- name: Install and Configure Kubernete Deployer
+  hosts: kubernete-deployer
+  remote_user: ubuntu
+  sudo: yes
+  roles:
+  - base
+  - kubernete-deployer
