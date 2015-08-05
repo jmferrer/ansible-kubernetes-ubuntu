@@ -2,7 +2,7 @@
   apt: name=git state=present update_cache=yes
 
 - name: Download kubernetes repo
-  git: repo=https://github.com/GoogleCloudPlatform/kubernetes.git dest=/root/kubernetes.git force=yes
+  git: repo=https://github.com/GoogleCloudPlatform/kubernetes.git dest=/root/kubernetes.git force=yes version={{ version }}
   notify: build kubernetes
 
 - name: flush handlers
