@@ -5,8 +5,11 @@
   git: repo=https://github.com/GoogleCloudPlatform/kubernetes.git dest=/root/kubernetes.git force=yes version={{ version }}
   notify: build kubernetes
 
-- name: flush handlers
+- name: Build kubernetes
   meta: flush_handlers
+
+- name: Create link to kubectl binary
+  file: src=/root/kubernetes.git/cluster/ubuntu/binaries/kubectl dest=/usr/local/bin/kubectl owner=root group=root state=link
 
 - name: Configure ssh. Create /root/.ssh directory
   file: path=/root/.ssh state=directory owner=root group=root mode=0700
