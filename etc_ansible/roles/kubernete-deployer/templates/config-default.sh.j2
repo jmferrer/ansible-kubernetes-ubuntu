@@ -18,7 +18,7 @@
 
 # Define all your cluster nodes, MASTER node comes first"
 # And separated with blank space like <user_1@ip_1> <user_2@ip_2> <user_3@ip_3> 
-export nodes=${nodes:-"{% for host in groups['kubernete-minions'] %}root@{{ hostvars[host].ansible_default_ipv4.address }} {% endfor %}"}
+export nodes=${nodes:-"{% for host in groups['kubernete-minions'] %}root@{{ hostvars[host].ansible_eth0["ipv4"]["address"] }} {% endfor %}"}
 
 # Define all your nodes role: a(master) or i(minion) or ai(both master and minion), must be the order same 
 role=${role:-"ai i i"}
