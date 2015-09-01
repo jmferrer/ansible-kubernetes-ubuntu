@@ -4,8 +4,5 @@
 - name: deploy kubernetes
   shell: cd /root/kubernetes.git/cluster;KUBERNETES_PROVIDER=ubuntu ./kube-up.sh
 
-- name: create kube-system namespace
-  shell: kubectl create -f /tmp/namespace.yaml
-
 - name: deploy addons
   shell: cd /root/kubernetes.git/cluster/ubuntu;KUBERNETES_PROVIDER=ubuntu ./deployAddons.sh
