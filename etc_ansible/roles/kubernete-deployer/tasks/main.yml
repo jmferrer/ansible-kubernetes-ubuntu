@@ -26,11 +26,5 @@
   - deploy kubernetes
   - deploy addons
 
-- name: Create kube-system namespace
-  copy: src=namespace.yaml dest=/tmp/namespace.yaml
-  notify:
-  - create kube-system namespace
-
 - name: flush handlers
   meta: flush_handlers
-
