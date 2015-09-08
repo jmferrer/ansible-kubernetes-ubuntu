@@ -1,10 +1,11 @@
 [kubernete-deployer]
-192.168.1.168
+192.168.1.180
 
 [kubernete-deployer:vars]
-version=master
+#version=master
+version=616ba4ea9aff997aae33640b769c8ed6761020f8
 
 [kubernete-minions]
-192.168.1.177
-192.168.1.178
-192.168.1.179
+192.168.1.181
+192.168.1.182
+192.168.1.183
