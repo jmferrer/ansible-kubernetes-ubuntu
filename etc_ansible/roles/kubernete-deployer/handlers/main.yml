@@ -1,11 +1,11 @@
 - name: build kubernetes
   shell: cd /root/kubernetes.git/cluster/ubuntu; ./build.sh
 
-- name: deploy kubernetes
-  shell: cd /root/kubernetes.git/cluster; KUBERNETES_PROVIDER=ubuntu ./kube-up.sh
-
 - name: run build-cross
   shell: cd /root/kubernetes.git/; echo "y" | ./build/run.sh hack/build-cross.sh
+
+- name: deploy kubernetes
+  shell: cd /root/kubernetes.git/cluster; KUBERNETES_PROVIDER=ubuntu ./kube-up.sh
 
 - name: deploy addons
   shell: cd /root/kubernetes.git/cluster/ubuntu; KUBERNETES_PROVIDER=ubuntu ./deployAddons.sh

@@ -2,7 +2,9 @@
 192.168.42.65
 
 [kubernete-deployer:vars]
-version=v1.1.0
+version=master
+kubernetes_repo=https://github.com/thaerlo/kubernetes.git
+validate_yaml=False
 
 [kubernete-minions]
 192.168.42.65

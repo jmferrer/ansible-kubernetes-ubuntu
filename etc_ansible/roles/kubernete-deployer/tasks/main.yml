@@ -2,7 +2,7 @@
   apt: name=git state=present update_cache=yes
 
 - name: Download kubernetes repo
-  git: repo=https://github.com/GoogleCloudPlatform/kubernetes.git dest=/root/kubernetes.git force=yes version={{ version }}
+  git: repo={{ kubernetes_repo }} dest=/root/kubernetes.git force=yes version={{ version }}
   notify: build kubernetes
 
 - name: Build kubernetes
@@ -37,12 +37,19 @@
 - name: Install bridge-utils
   apt: name=bridge-utils state=present
 
+- name: Do not validate skydns-svc.yaml
+  replace: dest=/root/kubernetes.git/cluster/ubuntu/deployAddons.sh regexp="create -f skydns-svc.yaml" replace="create -f skydns-svc.yaml --validate=false"
+  when: validate_yaml == False
+
+- name: Do not validate kube-ui-svc.yaml
+  replace: dest=/root/kubernetes.git/cluster/ubuntu/deployAddons.sh regexp="cluster\/addons\/kube-ui\/kube-ui-svc.yaml" replace="cluster/addons/kube-ui/kube-ui-svc.yaml --validate=false"
+  when: validate_yaml == False
 
 - name: Configure and deploy kubernetes
   template: src=config-default.sh.j2 dest=/root/kubernetes.git/cluster/ubuntu/config-default.sh
   notify:
-  - deploy kubernetes
   - run build-cross
+  - deploy kubernetes
   - deploy addons
 
 - name: flush handlers
