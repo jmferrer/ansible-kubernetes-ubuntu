@@ -1,10 +1,28 @@
 [kubernete-deployer]
-192.168.1.168
+localhost
+
 
 [kubernete-deployer:vars]
-version=master
+version=release-1.1
+kubernetes_repo=https://github.com/kubernetes/kubernetes.git
+validate_yaml=False
+
+ansible_connection=local
+ansible_become=true
+ansible_become_user=root
+ansible_become_method=sudo
+
 
 [kubernete-minions]
-192.168.1.177
-192.168.1.178
-192.168.1.179
+192.168.56.10 
+192.168.56.11
+192.168.56.12
+192.168.56.13
+
+
+[kubernete-minions:vars]
+ansible_user=ubuntu
+ansible_become=true
+ansible_become_method=sudo
+ansible_become_user=root
+

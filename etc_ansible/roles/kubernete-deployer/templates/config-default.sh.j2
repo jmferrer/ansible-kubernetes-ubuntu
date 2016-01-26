@@ -17,17 +17,17 @@
 ## Contains configuration values for the Ubuntu cluster
 
 # Define all your cluster nodes, MASTER node comes first"
-# And separated with blank space like <user_1@ip_1> <user_2@ip_2> <user_3@ip_3> 
+# And separated with blank space like <user_1@ip_1> <user_2@ip_2> <user_3@ip_3>
 export nodes=${nodes:-"{% for host in groups['kubernete-minions'] %}root@{{ hostvars[host].ansible_eth0["ipv4"]["address"] }} {% endfor %}"}
 
-# Define all your nodes role: a(master) or i(minion) or ai(both master and minion), must be the order same 
-role=${role:-"ai i i"}
+# Define all your nodes role: a(master) or i(minion) or ai(both master and minion), must be the order same
+role=${role:-"ai ai ai i"}
 # If it practically impossible to set an array as an environment variable
 # from a script, so assume variable is a string then convert it to an array
 export roles=($role)
 
 # Define minion numbers
-export NUM_MINIONS=${NUM_MINIONS:-3}
+export NUM_MINIONS=${NUM_MINIONS:-4}
 # define the IP range used for service cluster IPs.
 # according to rfc 1918 ref: https://tools.ietf.org/html/rfc1918 choose a private ip range here.
 export SERVICE_CLUSTER_IP_RANGE=${SERVICE_CLUSTER_IP_RANGE:-192.168.3.0/24}  # formerly PORTAL_NET
@@ -35,7 +35,7 @@ export SERVICE_CLUSTER_IP_RANGE=${SERVICE_CLUSTER_IP_RANGE:-192.168.3.0/24}  # f
 export FLANNEL_NET=${FLANNEL_NET:-172.16.0.0/16}
 
 # Admission Controllers to invoke prior to persisting objects in cluster
-export ADMISSION_CONTROL=NamespaceLifecycle,NamespaceExists,LimitRanger,ServiceAccount,ResourceQuota,SecurityContextDeny
+export ADMISSION_CONTROL=NamespaceLifecycle,LimitRanger,ServiceAccount,ResourceQuota,DenyEscalatingExec,SecurityContextDeny
 
 SERVICE_NODE_PORT_RANGE=${SERVICE_NODE_PORT_RANGE:-"30000-32767"}
 
@@ -66,3 +66,7 @@ ENABLE_CLUSTER_UI="${KUBE_ENABLE_CLUSTER_UI:-true}"
 
 # Optional: Enable setting flags for kube-apiserver to turn on behavior in active-dev
 #RUNTIME_CONFIG=""
+
+# Optional: Add http or https proxy when download easy-rsa.
+# Add envitonment variable separated with blank space like "http_proxy=http://10.x.x.x:8080 https_proxy=https://10.x.x.x:8443"
+PROXY_SETTING=${PROXY_SETTING:-""}

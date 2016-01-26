@@ -1,28 +1,66 @@
 - name: Install git
   apt: name=git state=present update_cache=yes
+  tags: workingon
 
 - name: Download kubernetes repo
-  git: repo=https://github.com/GoogleCloudPlatform/kubernetes.git dest=/root/kubernetes.git force=yes version={{ version }}
+  git: repo={{ kubernetes_repo }} dest=/root/kubernetes.git force=yes version={{ version }}
   notify: build kubernetes
+  tags: workingon
 
 - name: Build kubernetes
   meta: flush_handlers
+  tags: workingon
 
 - name: Create link to kubectl binary
   file: src=/root/kubernetes.git/cluster/ubuntu/binaries/kubectl dest=/usr/local/bin/kubectl owner=root group=root state=link
+  tags: workingon
 
 - name: Configure ssh. Create /root/.ssh directory
   file: path=/root/.ssh state=directory owner=root group=root mode=0700
+  tags: workingon
 
 - name: Configure ssh. Send id_rsa file
   copy: src=id_rsa dest=/root/.ssh/id_rsa owner=root group=root mode=0700
+  tags: workingon
 
 - name: Configure ssh. Send authorized_keys file
   copy: src=authorized_keys dest=/root/.ssh/authorized_keys owner=root group=root mode=0700
+  tags: workingon
+
+
+# Needs to create a container to run ./build/run.sh hack/build-cross.sh so install docker is needed
+- name: Install linux-image extras
+  apt: name=linux-image-extra-virtual state=present update_cache=yes
+  tags: workingon
+
+- name: Add apt key
+  apt_key: keyserver=p80.pool.sks-keyservers.net id=58118E89F3A912897C070ADBF76221572C52609D
+  tags: workingon
+
+- name: Add docker repository
+  apt_repository: repo='deb https://apt.dockerproject.org/repo ubuntu-trusty main' state=present
+  tags: workingon
+
+- name: Install docker
+  apt: name=docker-engine state=present update_cache=yes
+  tags: workingon
+
+- name: Install bridge-utils
+  apt: name=bridge-utils state=present
+  tags: workingon
+
+#- name: Do not validate skydns-svc.yaml
+#  replace: dest=/root/kubernetes.git/cluster/ubuntu/deployAddons.sh regexp="create -f skydns-svc.yaml" replace="create -f skydns-svc.yaml --validate=false"
+#  when: validate_yaml == False
+
+#- name: Do not validate kube-ui-svc.yaml
+#  replace: dest=/root/kubernetes.git/cluster/ubuntu/deployAddons.sh regexp="cluster\/addons\/kube-ui\/kube-ui-svc.yaml" replace="cluster/addons/kube-ui/kube-ui-svc.yaml --validate=false"
+#  when: validate_yaml == False
 
 - name: Configure and deploy kubernetes
   template: src=config-default.sh.j2 dest=/root/kubernetes.git/cluster/ubuntu/config-default.sh
   notify:
+  - run build-cross
   - deploy kubernetes
   - deploy addons
 
